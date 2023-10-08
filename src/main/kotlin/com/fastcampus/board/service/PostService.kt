@@ -4,9 +4,16 @@ import com.fastcampus.board.domain.QPost.post
 import com.fastcampus.board.exception.PostNotDeletableException
 import com.fastcampus.board.exception.PostNotFoundException
 import com.fastcampus.board.repository.PostRepository
+import com.fastcampus.board.service.dto.PageSearchRequestDto
 import com.fastcampus.board.service.dto.PostCreateRequestDto
+import com.fastcampus.board.service.dto.PostDetailResponseDto
+import com.fastcampus.board.service.dto.PostSummaryResponseDto
 import com.fastcampus.board.service.dto.PostUpdateRequestDto
+import com.fastcampus.board.service.dto.toDetailResponseDto
 import com.fastcampus.board.service.dto.toEntity
+import com.fastcampus.board.service.dto.toSummaryResponseDto
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -33,5 +40,13 @@ class PostService(private val postRepository: PostRepository) {
         if (post.createdBy != deletedBy) throw PostNotDeletableException()
         postRepository.delete(post)
         return id
+    }
+
+    fun getPost(id: Long): PostDetailResponseDto {
+        return postRepository.findByIdOrNull(id)?.toDetailResponseDto() ?: throw PostNotFoundException()
+    }
+
+    fun findPageBy(pageRequest: Pageable, postSearchRequestDto: PageSearchRequestDto): Page<PostSummaryResponseDto> {
+        return postRepository.findPageBy(pageRequest, postSearchRequestDto).toSummaryResponseDto()
     }
 }
