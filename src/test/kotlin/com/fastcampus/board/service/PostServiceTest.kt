@@ -12,7 +12,6 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import jakarta.persistence.PostUpdate
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 
@@ -45,7 +44,8 @@ class PostServiceTest(
         val saved = postRepository.save(Post(title = "title", content = "content", createdBy = "harris"))
         When("정상 수정시") {
             val updatedId = postService.updatePost(
-                saved.id, PostUpdateRequestDto(
+                saved.id,
+                PostUpdateRequestDto(
                     title = "update title",
                     content = "update content",
                     updatedBy = "harris"
@@ -63,7 +63,8 @@ class PostServiceTest(
             then("게시글을 찾을수 없다는 에러가 발생한다.") {
                 shouldThrow<PostNotFoundException> {
                     postService.updatePost(
-                        9999L, PostUpdateRequestDto(
+                        9999L,
+                        PostUpdateRequestDto(
                             title = "update title",
                             content = "update content",
                             updatedBy = "harris"
@@ -76,7 +77,8 @@ class PostServiceTest(
             then("수정할 수 없는 게시글 입니다. 예외가 발생한다.") {
                 shouldThrow<PostNotUpdatableException> {
                     postService.updatePost(
-                        1L, PostUpdateRequestDto(
+                        1L,
+                        PostUpdateRequestDto(
                             title = "update title",
                             content = "update content",
                             updatedBy = "update harris"

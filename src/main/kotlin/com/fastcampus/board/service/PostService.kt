@@ -22,7 +22,7 @@ class PostService(private val postRepository: PostRepository) {
 
     @Transactional
     fun updatePost(id: Long, requestDto: PostUpdateRequestDto): Long {
-        val post = postRepository.findByIdOrNull(id)?:throw PostNotFoundException()
+        val post = postRepository.findByIdOrNull(id) ?: throw PostNotFoundException()
         post.update(requestDto)
         return id
     }
@@ -30,7 +30,7 @@ class PostService(private val postRepository: PostRepository) {
     @Transactional
     fun deletePost(id: Long, deletedBy: String): Long {
         val post = postRepository.findByIdOrNull(id) ?: throw PostNotFoundException()
-        if(post.createdBy != deletedBy) throw PostNotDeletableException()
+        if (post.createdBy != deletedBy) throw PostNotDeletableException()
         postRepository.delete(post)
         return id
     }
