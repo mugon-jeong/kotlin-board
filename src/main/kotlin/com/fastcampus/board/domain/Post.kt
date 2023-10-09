@@ -14,6 +14,7 @@ class Post(
     createdBy: String,
     title: String,
     content: String,
+    tags: List<String> = emptyList(),
 ) : BaseEntity(
     createdBy
 ) {
@@ -30,6 +31,10 @@ class Post(
     // post에서 comment를 삭제하거나 추가를 할때 comment 테이블에 반영
     @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = [CascadeType.ALL])
     var comments: MutableList<Comment> = mutableListOf()
+        protected set
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = [CascadeType.ALL])
+    var tags: MutableList<Tag> = tags.map { Tag(it, this, createdBy) }.toMutableList()
         protected set
 
     fun update(postUpdateRequestDto: PostUpdateRequestDto) {

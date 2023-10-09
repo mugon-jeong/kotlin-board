@@ -9,6 +9,7 @@ data class PostSummaryResponse(
     val title: String,
     val createdBy: String,
     val createdAt: String,
+    val tags: String? = null,
 )
 
 fun Page<PostSummaryResponseDto>.toResponse() = PageImpl(
