@@ -91,7 +91,7 @@ class PostServiceTest(
                     content = "content1",
                     createdBy = "harris2",
                     tags = listOf("tag1", "tag2", "tag5")
-                ),
+                )
             )
         )
     }

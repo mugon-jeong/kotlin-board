@@ -19,5 +19,5 @@ fun Post.toDetailResponseDto() = PostDetailResponseDto(
     createdAt = createdAt.toString(),
     createdBy = createdBy,
     comments = comments.map { it.toResponseDto() },
-    tags = tags.map { it.name },
+    tags = tags.map { it.name }
 )
