@@ -34,4 +34,4 @@ Content-Type: application/json
 GET /localhost:8080/posts/1
 
 ### 게시글 목록 조회
-GET /localhost:8080/posts?page=0&size=10&title=title&createdBy=harris
+GET /localhost:8080/posts?page=0&size=10&tag=tag1

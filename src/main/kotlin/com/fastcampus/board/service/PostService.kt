@@ -3,6 +3,7 @@ package com.fastcampus.board.service
 import com.fastcampus.board.exception.PostNotDeletableException
 import com.fastcampus.board.exception.PostNotFoundException
 import com.fastcampus.board.repository.PostRepository
+import com.fastcampus.board.repository.TagRepository
 import com.fastcampus.board.service.dto.PageSearchRequestDto
 import com.fastcampus.board.service.dto.PostCreateRequestDto
 import com.fastcampus.board.service.dto.PostDetailResponseDto
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional
 class PostService(
     private val postRepository: PostRepository,
     private val likeService: LikeService,
+    private val tagRepository: TagRepository,
 ) {
 
     @Transactional
@@ -50,6 +52,12 @@ class PostService(
     }
 
     fun findPageBy(pageRequest: Pageable, postSearchRequestDto: PageSearchRequestDto): Page<PostSummaryResponseDto> {
+        postSearchRequestDto.tag?.let {
+            return tagRepository.findPageBy(pageRequest, it).toSummaryResponseDto(likeService::countLike)
+        }
+
+        // 태그로 검색 조회시
+        // post id 별로 태그 조회 n번이 추가적으로 실행
         return postRepository.findPageBy(pageRequest, postSearchRequestDto).toSummaryResponseDto(likeService::countLike)
     }
 }
