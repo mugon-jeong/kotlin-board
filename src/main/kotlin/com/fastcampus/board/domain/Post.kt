@@ -41,6 +41,14 @@ class Post(
         if (postUpdateRequestDto.updatedBy != this.createdBy) throw PostNotUpdatableException()
         this.title = postUpdateRequestDto.title
         this.content = postUpdateRequestDto.content
+        replaceTags(postUpdateRequestDto.tags)
         super.updatedBy(postUpdateRequestDto.updatedBy)
+    }
+
+    private fun replaceTags(tags: List<String>) {
+        if (this.tags.map { it.name } != tags) {
+            this.tags.clear()
+            this.tags.addAll(tags.map { Tag(it, this, this.createdBy) })
+        }
     }
 }
