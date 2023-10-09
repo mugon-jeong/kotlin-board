@@ -2,6 +2,8 @@ package com.fastcampus.board.controller
 
 import com.fastcampus.board.controller.dto.CommentCreateRequest
 import com.fastcampus.board.controller.dto.CommentUpdateRequest
+import com.fastcampus.board.controller.dto.toDto
+import com.fastcampus.board.service.CommentService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -11,13 +13,15 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class CommentController {
+class CommentController(
+    private val commentService: CommentService,
+) {
     @PostMapping("posts/{postId}/comments")
     fun createCommnet(
         @PathVariable postId: Long,
         @RequestBody commentCreateRequest: CommentCreateRequest,
     ): Long {
-        return 1L
+        return commentService.createComment(postId, commentCreateRequest.toDto())
     }
 
     @PutMapping("comments/{commentId}")
@@ -25,7 +29,7 @@ class CommentController {
         @PathVariable commentId: Long,
         @RequestBody commentUpdateRequest: CommentUpdateRequest,
     ): Long {
-        return 1L
+        return commentService.updateComment(commentId, commentUpdateRequest.toDto())
     }
 
     @DeleteMapping("comments/{commentId}")
@@ -33,6 +37,6 @@ class CommentController {
         @PathVariable commentId: Long,
         @RequestParam deletedBy: String,
     ): Long {
-        return 1L
+        return commentService.deleteComment(commentId, deletedBy)
     }
 }
