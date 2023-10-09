@@ -1,9 +1,11 @@
 package com.fastcampus.board.service
 
+import com.fastcampus.board.domain.Comment
 import com.fastcampus.board.domain.Post
 import com.fastcampus.board.exception.PostNotDeletableException
 import com.fastcampus.board.exception.PostNotFoundException
 import com.fastcampus.board.exception.PostNotUpdatableException
+import com.fastcampus.board.repository.CommentRepository
 import com.fastcampus.board.repository.PostRepository
 import com.fastcampus.board.service.dto.PageSearchRequestDto
 import com.fastcampus.board.service.dto.PostCreateRequestDto
@@ -22,6 +24,7 @@ import org.springframework.data.repository.findByIdOrNull
 class PostServiceTest(
     private val postService: PostService,
     private val postRepository: PostRepository,
+    private val commentRepository: CommentRepository,
 ) : BehaviorSpec({
     beforeTest {
         postRepository.saveAll(
@@ -143,6 +146,16 @@ class PostServiceTest(
                 shouldThrow<PostNotFoundException> {
                     postService.getPost(9999L)
                 }
+            }
+        }
+        When("댓글 추가시") {
+            commentRepository.save(Comment(content = "댓글 내용1", post = saved, createdBy = "댓글 작성자"))
+            commentRepository.save(Comment(content = "댓글 내용2", post = saved, createdBy = "댓글 작성자"))
+            commentRepository.save(Comment(content = "댓글 내용3", post = saved, createdBy = "댓글 작성자"))
+            val post = postService.getPost(saved.id)
+            then("댓글이 함께 조회됨을 확인한다.") {
+                post.comments.size shouldBe 3
+                post.comments[0].content shouldBe "댓글 내용1"
             }
         }
     }
