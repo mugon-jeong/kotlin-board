@@ -18,7 +18,7 @@ jobs:
                     if [ "$new_version" == "$tag_version" ]; then
                       echo "Version already up to date"
                     else
-                      sed -i "s/version = '[^']*'/version = '$new_version'/g" build.gradle
+                      sed -i "s/version = '[^']*'/version = '$new_version'/g" build.gradle.kts
                       git add .
                     fi
             -   name: Commit & Push changes
