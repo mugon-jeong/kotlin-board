@@ -1,0 +1,25 @@
+name: "Create PR"
+on: push
+
+jobs:
+    create-pr-on-push:
+        if: ${{ (contains(github.event.head_commit.message, 'docs') && github.event.pull_request.merged == false }}
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Running OpenAPI Spec diff action
+                id: swagger-diff
+                uses: oasdiff/oasdiff-action/diff@main
+                with:
+                    base: 'docs/old.yaml'
+                    revision: 'docs/new.yaml'
+                run: |
+                    echo '::set-output name=diff::{message}'
+            -   uses: actions/checkout@1.0.0
+            -   name: Create pull request
+                uses: peter-evans/create-pull-request@v5
+                with:
+                    token: ${{ secrets.TOKEN }}
+                    body: |
+                        Docs
+                        ${{ steps.swagger-diff.outputs.diff }}
+                    labels: documentation
