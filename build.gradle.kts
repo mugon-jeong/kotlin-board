@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "com.fastcampus"
-version = "0.0.1-SNAPSHOT"
+version = "1.0.3"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
