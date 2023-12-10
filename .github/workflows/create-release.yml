@@ -25,3 +25,8 @@ jobs:
                     github_token: ${{ secrets.TOKEN }}
                     message: "Release version ${{ github.ref }} [skip ci]"
                     force-add: "true"
+            - name: Running OpenAPI Spec diff action
+              uses: oasdiff/oasdiff-action/diff@main
+              with:
+                    base: 'docs/old.yaml'
+                    revision: 'docs/new.yaml'
