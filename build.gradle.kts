@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
     kotlin("plugin.jpa") version "1.8.22"
+    id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
 
     // ktlint
     id("org.jlleitschuh.gradle.ktlint") version "11.4.0"
@@ -32,7 +33,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("com.h2database:h2")
+    runtimeOnly("com.h2database:h2")
 
     // redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
@@ -66,4 +67,14 @@ tasks.withType<Test> {
 
 tasks.named<Jar>("jar") {
     enabled = false
+}
+
+tasks.withType<Test> {
+    exclude("**/*")
+}
+openApi {
+    apiDocsUrl.set("http://localhost:8080/v3/api-docs.yaml")
+    outputDir.set(file("$projectDir/docs"))
+    outputFileName.set("new.yaml")
+    waitTimeInSeconds.set(10)
 }
