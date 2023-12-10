@@ -15,15 +15,10 @@ jobs:
                 run: |
                     version=$(git describe --tags --abbrev=0 | sed 's/v//g')
                     new_version=$(echo $version | awk -F. '{print $1"."$2"."$3}')
-                    echo $tag_version
-                    if [ "$new_version" == "$tag_version" ]; then
-                      echo "Version already up to date"
-                    else
-                      echo "Version up to date"
-                      echo $new_version
-                      sed -i "s/version = '[^']*'/version = '$new_version'/g" build.gradle.kts
-                      git add .
-                    fi
+                    echo "Version up to date"
+                    echo $new_version
+                    sed -i "s/\(version\s*=\s*\"\)[^\"]*\(\".*\)/\1$new_version\2/" build.gradle.kts
+                    git add .
             -   name: Commit & Push changes
                 uses: actions-js/push@master
                 with:
