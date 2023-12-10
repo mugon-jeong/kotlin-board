@@ -1,0 +1,29 @@
+name: Create Release
+
+on:
+    release:
+        types:
+            - published
+
+jobs:
+    build-release:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v3
+            -   name: Increment Build.gradle version
+                run: |
+                    version=$(git describe --tags --abbrev=0 | sed 's/v//g')
+                    new_version=$(echo $version | awk -F. '{print $1"."$2"."$3}')
+                    if [ "$new_version" == "$tag_version" ]; then
+                      echo "Version already up to date"
+                    else
+                      sed -i "s/version = '[^']*'/version = '$new_version'/g" build.gradle
+                      git add .
+                    fi
+            -   name: Commit & Push changes
+                uses: actions-js/push@master
+                with:
+                    github_token: ${{ secrets.TOKEN }}
+                    message: "Release version ${{ github.ref }} [skip ci]"
+                    force-add: "true"
